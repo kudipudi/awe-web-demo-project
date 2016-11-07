@@ -122,28 +122,12 @@
           "config" : {
             "packages" : {
               "yum" : {
-                "httpd"     : [],
-                "mod_ssl"     : [],
-                "openssl"     : []
+                "puppet"     : [],
+                "git"     : []
               }
             },
 
             "files" : {
-              "/var/www/html/index.html" : {
-                "content" : { "Fn::Join" : [ "", [
-                  "<html>\n",
-                  "  <head>\n",
-                  "    <title>Hello World</title>\n",
-                  "  </head>\n",
-                  "  <body>\n",
-                  "    <h1>Hello World!</h1>",
-                  "  </body>\n",
-                  "</html>\n"
-                ]]},
-                "mode"  : "000600",
-                "owner" : "apache",
-                "group" : "apache"
-              },
               "/etc/cfn/cfn-hup.conf" : {
                 "content" : { "Fn::Join" : ["", [
                   "[main]\n",
@@ -167,21 +151,6 @@
                   "runas=root\n"
                 ]]}
               },
-              "/tmp/httpd.conf" : {
-                "content": { "Fn::Join" : ["", [
-                  " ",
-                  "<VirtualHost *:80>",
-                  "  RewriteEngine On",
-                  "  RewriteCond %{HTTP:X-Forwarded-Proto} !https",
-                  "  RewriteRule !/elbcheck.html https://%{SERVER_NAME}%{REQUEST_URI}",
-                  "</VirtualHost>"
-               ]]}
-              }
-            },
-            "commands" : {
-                "appendhttpd" : {
-                  "command" : "cat /tmp/httpd.conf >> /etc/httpd/conf/httpd.conf"
-                }
             },
 
             "services" : {
@@ -231,11 +200,11 @@
       }
     }
   },
-    "Outputs" : {
-      "WebsiteURL" : {
-        "Description" : "URL for newly created web stack",
-        "Value" : { "Fn::Join" : ["", ["http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]] }
-      }
+  "Outputs" : {
+    "WebsiteURL" : {
+      "Description" : "URL for newly created web stack",
+      "Value" : { "Fn::Join" : ["", ["http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]] }
     }
+  }
 }
 
