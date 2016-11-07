@@ -17,3 +17,21 @@ package { 'mod_ssl':
 service { 'httpd':
   ensure => running,
 }
+
+file { '/var/www/html/index.html':
+          ensure => present,
+          source => "/tmp/awe-web-demo-project/puppet/files/index.html",
+}
+
+file { '/etc/httpd/conf/httpd.conf':
+          ensure => present,
+          source => "/tmp/awe-web-demo-project/puppet/files/httpd.conf",
+          notify => Service[httpd]
+}
+
+file { '/etc/httpd/conf.d/ssl.conf':
+          ensure => present,
+          source => "/tmp/awe-web-demo-project/puppet/files/ssl.conf",
+          notify => Service[httpd]
+}
+
